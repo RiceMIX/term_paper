@@ -118,75 +118,85 @@ class show_content(get_content):
         print()
         print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
 
-def get_content(html):
-    soup = BeautifulSoup(html, 'html.parser')
+class get_content2:
+    def __init__(self, name):
+        self.html = name
+        self.soup = BeautifulSoup(self.html, 'html.parser')
 
-    items1 = soup.find_all('div', class_='current-weather')
+        self.items1 = self.soup.find_all('div', class_='current-weather')
 
-    pog1 = []
-    pog2 = []
-    pog3 = []
-    pog4 = []
+        self.pog1 = []
+        self.pog2 = []
+        self.pog3 = []
+        self.pog4 = []
 
-    for item in items1:
-        pog1.append(dict(
-            grad=item.find('div', class_='current-weather-temperature').get_text(),
-        ))
 
-    items2 = soup.find_all('div', class_='days d-none d-lg-block')[0]
-    into = items2.find_all('div', class_='col-md-1 temperature')
+        self.items2 = self.soup.find_all('div', class_='days d-none d-lg-block')[0]
+        self.into = self.items2.find_all('div', class_='col-md-1 temperature')
 
-    for i in range(len(into)):
-        pog2.append(into[i].text)
 
-    items3 = soup.find_all('div', class_='current-weather-middle-forecast')[0]
-    it3 = items3.find_all('div', class_='forecast-weather-temperature')
 
-    items3 = soup.find_all('div', class_='current-weather-middle-forecast')[1]
-    it4 = items3.find_all('div', class_='forecast-weather-temperature')
+        self.items3 = self.soup.find_all('div', class_='current-weather-middle-forecast')[0]
+        self.it3 = self.items3.find_all('div', class_='forecast-weather-temperature')
 
-    pog3.append(it3[0].text)
-    pog3.append(it4[0].text)
+        self.items3 = self.soup.find_all('div', class_='current-weather-middle-forecast')[1]
+        self.it4 = self.items3.find_all('div', class_='forecast-weather-temperature')
 
-    for i in pog1:
-        p1 = i
+        self.pog3.append(self.it3[0].text)
+        self.pog3.append(self.it4[0].text)
 
-    items4 = soup.find_all('div', class_='days d-none d-lg-block')[0]
-    into4 = items4.find_all('div', class_='col-md-1 time')
 
-    for i in range(len(into4)):
-        pog4.append(into4[i].text)
 
-    print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
-    print("Джерело №2")
-    print("\t\t\t\t\t\t\t\t\t\tПогода "+x)
-    print("Температура прямо  зараз: "+p1['grad'])
-    print("Температура: вдень "+pog3[0], "||", "\tввечері "+pog3[1])
-    print("Прогноз на день")
-    for i in pog4:
-        print(i[:-2]+":00", end='       ')
-    print()
-    for i in pog2:
-        print(i, end='       ')
-        if i == pog2[4]:
-            print(end='  ')
-        if i == pog2[5]:
-            print(end=' ')
+        self.items4 = self.soup.find_all('div', class_='days d-none d-lg-block')[0]
+        self.into4 = self.items4.find_all('div', class_='col-md-1 time')
 
-    print()
-    print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+    def find_elem(self):
+        for item in self.items1:
+            self.pog1.append(dict(
+                grad=item.find('div', class_='current-weather-temperature').get_text(),
+            ))
+        for i in range(len(self.into)):
+            self.pog2.append(self.into[i].text)
+        for i in self.pog1:
+            self.p1 = i
+        for i in range(len(self.into4)):
+            self.pog4.append(self.into4[i].text)
+
+
+class show_content2(get_content2):
+    def show(self):
+        print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+        print("Джерело №2")
+        print("\t\t\t\t\t\t\t\t\t\tПогода ")
+        print("Температура прямо  зараз: " + self.p1['grad'])
+        print("Температура: вдень " + self.pog3[0], "||", "\tввечері " + self.pog3[1])
+        print("Прогноз на день")
+        for i in self.pog4:
+            print(i[:-2] + ":00", end='       ')
+        print()
+        for i in self.pog2:
+            print(i, end='     ')
+            if i == self.pog2[4]:
+                print(end='  ')
+            if i == self.pog2[5]:
+                print(end=' ')
+
+        print()
+        print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+
 
 
 def parse():
-    '''x = str(input("Enter:))'''
+    x = str(input("Enter:"))
 
-    Obj1 = get_html("Дубляни")
+    Obj1 = get_html(x)
     s_sinoptik = Obj1.poiskpres_sinoptik()
+    s_pogoda= Obj1.poiskpres_pogoda()
 
 
     html_sinoptik = Obj1.g_html_sinoptik(s_sinoptik)
     print(html_sinoptik)
-    html_pogoda = Obj1.g_html_sinoptik(s_sinoptik)
+    html_pogoda = Obj1.g_html_pogoda(s_pogoda)
     print(html_pogoda)
 
     if html_sinoptik.status_code == 200:
@@ -197,7 +207,9 @@ def parse():
         print("\nError")
 
     if html_pogoda.status_code == 200:
-        get_content(html_pogoda.text)
+        Obj3 = show_content2(html_pogoda.text)
+        Obj3.find_elem()
+        Obj3.show()
     else:
         print("\nError")
 
