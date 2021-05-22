@@ -118,71 +118,63 @@ class show_content(get_content):
         print()
         print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
 
+def get_content(html):
+    soup = BeautifulSoup(html, 'html.parser')
 
+    items1 = soup.find_all('div', class_='current-weather')
 
-class get_content2:
-    @staticmethod
-    def consa(html):
+    pog1 = []
+    pog2 = []
+    pog3 = []
+    pog4 = []
 
-        soup = BeautifulSoup(html, 'html.parser')
+    for item in items1:
+        pog1.append(dict(
+            grad=item.find('div', class_='current-weather-temperature').get_text(),
+        ))
 
-        items1 = soup.find_all('div', class_='current-weather')
+    items2 = soup.find_all('div', class_='days d-none d-lg-block')[0]
+    into = items2.find_all('div', class_='col-md-1 temperature')
 
-        pog1 = []
-        pog2 = []
-        pog3 = []
-        pog4 = []
+    for i in range(len(into)):
+        pog2.append(into[i].text)
 
-        for item in items1:
-            pog1.append(dict(
-                grad=item.find('div', class_='current-weather-temperature').get_text(),
-            ))
+    items3 = soup.find_all('div', class_='current-weather-middle-forecast')[0]
+    it3 = items3.find_all('div', class_='forecast-weather-temperature')
 
-        items2 = soup.find_all('div', class_='days d-none d-lg-block')[0]
-        into = items2.find_all('div', class_='col-md-1 temperature')
+    items3 = soup.find_all('div', class_='current-weather-middle-forecast')[1]
+    it4 = items3.find_all('div', class_='forecast-weather-temperature')
 
-        for i in range(len(into)):
-            pog2.append(into[i].text)
+    pog3.append(it3[0].text)
+    pog3.append(it4[0].text)
 
-        items3 = soup.find_all('div', class_='current-weather-middle-forecast')[0]
-        it3 = items3.find_all('div', class_='forecast-weather-temperature')
+    for i in pog1:
+        p1 = i
 
-        items3 = soup.find_all('div', class_='current-weather-middle-forecast')[1]
-        it4 = items3.find_all('div', class_='forecast-weather-temperature')
+    items4 = soup.find_all('div', class_='days d-none d-lg-block')[0]
+    into4 = items4.find_all('div', class_='col-md-1 time')
 
-        pog3.append(it3[0].text)
-        pog3.append(it4[0].text)
+    for i in range(len(into4)):
+        pog4.append(into4[i].text)
 
-        for i in pog1:
-            p1 = i
+    print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
+    print("Джерело №2")
+    print("\t\t\t\t\t\t\t\t\t\tПогода "+x)
+    print("Температура прямо  зараз: "+p1['grad'])
+    print("Температура: вдень "+pog3[0], "||", "\tввечері "+pog3[1])
+    print("Прогноз на день")
+    for i in pog4:
+        print(i[:-2]+":00", end='       ')
+    print()
+    for i in pog2:
+        print(i, end='       ')
+        if i == pog2[4]:
+            print(end='  ')
+        if i == pog2[5]:
+            print(end=' ')
 
-        items4 = soup.find_all('div', class_='days d-none d-lg-block')[0]
-        into4 = items4.find_all('div', class_='col-md-1 time')
-
-        for i in range(len(into4)):
-            pog4.append(into4[i].text)
-
-        print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
-        print("Джерело №2")
-        print("\t\t\t\t\t\t\t\t\t\tПогода ")
-        print("Температура прямо  зараз: " + p1['grad'])
-        print("Температура: вдень " + pog3[0], "||", "\tввечері " + pog3[1])
-        print("Прогноз на день")
-        for i in pog4:
-            print(i[:-2] + ":00", end='       ')
-        print()
-        for i in pog2:
-            print(i, end='       ')
-            if i == pog2[4]:
-                print(end='  ')
-            if i == pog2[5]:
-                print(end=' ')
-
-        print()
-        print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
-
-
-
+    print()
+    print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
 
 
 def parse():
@@ -205,8 +197,7 @@ def parse():
         print("\nError")
 
     if html_pogoda.status_code == 200:
-        Obj3 = get_content2()
-        Obj3.consa(html_pogoda.text)
+        get_content(html_pogoda.text)
     else:
         print("\nError")
 
