@@ -3,16 +3,15 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote
 
 
-
 class link:
     HEADERS = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (HTML, like Gecko) '
-        'Chrome/88.0.4324.190 Safari/537.36',
+                      'Chrome/88.0.4324.190 Safari/537.36',
         'accept': '*/*'}
 
     def __init__(self, name):
         self.name = name
-        self.q = format(quote("погода-"+self.name))
+        self.q = format(quote("погода-" + self.name))
 
     def poiskpres_sinoptik(self):
         self.url_s = "https://ua.sinoptik.ua/{0}".format(self.q)
@@ -21,8 +20,6 @@ class link:
     def poiskpres_pogoda(self):
         self.url_p = "https://pogoda33.ua/%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0-" + self.q + "/%D0%B4%D0%B5%D0%BD%D1%8C"
         return self.url_p
-
-
 
 
 class get_html(link):
@@ -37,14 +34,31 @@ class get_html(link):
         return self.r_p
 
 
+class get_content:
+
+    def __init__(self):
+        #sin
+        self.weather1 = []
+        self.weather2 = []
+        self.weather3 = []
 
 
+        #pog
+        self.pog1 = []
+        self.pog2 = []
+        self.pog3 = []
+        self.pog4 = []
 
 
+    def find_elem(self):
+        pass
 
 
-class get_content_sin:
-    def __init__(self, name):
+class get_content_sin(get_content):
+
+    def __init__(self, name, n):
+        super().__init__()
+        self.name_local = n
         self.html = name
         self.soup = BeautifulSoup(self.html, 'html.parser')
 
@@ -52,9 +66,6 @@ class get_content_sin:
         self.item2 = self.soup.find_all('div', class_='tabsContentInner')
         self.item3 = self.soup.find_all('tr', class_='temperature')
 
-        self.weather1 = []
-        self.weather2 = []
-        self.weather3 = []
 
     def find_elem(self):
         for i in self.items:
@@ -90,20 +101,20 @@ class get_content_sin:
 
 
 class show_content_sin(get_content_sin):
-    def __init__(self, name):
-        super().__init__(name)
-        self.mw3 = []
-        self.mw2 = []
 
     def show(self):
 
         print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
         print("Джерело №1")
-        print("\t\t\t\t\t\t\t\t\t\tПогода ")
+        print("\t\t\t\t\t\t\t\t\t\tПогода в ", self.name_local)
         print("День:" + self.w1['title'])
         print("Число: " + self.w1['date1'], ' ', self.w1['date2'])
         print("Температура: :" + self.w1['temp'], " ||  " + self.w1['temp2'])
         print()
+
+
+        self.mw3 = []
+        self.mw2 = []
 
         for i in self.w2:
             self.mw2.append(self.w2[i])
@@ -123,25 +134,17 @@ class show_content_sin(get_content_sin):
         print()
         print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
 
-class get_content_pog:
-    def __init__(self, name):
 
+class get_content_pog(get_content):
+    def __init__(self, name, n):
+        super().__init__()
+        self.name_local = n
         self.soup = BeautifulSoup(name, 'html.parser')
-
-
-        self.pog1 = []
-        self.pog2 = []
-        self.pog3 = []
-        self.pog4 = []
-
-
 
 
 
         self.items2 = self.soup.find_all('div', class_='days d-none d-lg-block')[0]
         self.into = self.items2.find_all('div', class_='col-md-1 temperature')
-
-
 
         self.items3 = self.soup.find_all('div', class_='current-weather-middle-forecast')[0]
         self.it3 = self.items3.find_all('div', class_='forecast-weather-temperature')
@@ -149,11 +152,8 @@ class get_content_pog:
         self.items3 = self.soup.find_all('div', class_='current-weather-middle-forecast')[1]
         self.it4 = self.items3.find_all('div', class_='forecast-weather-temperature')
 
-
         self.pog3.append(self.it3[0].text)
         self.pog3.append(self.it4[0].text)
-
-
 
         self.items4 = self.soup.find_all('div', class_='days d-none d-lg-block')[0]
         self.into4 = self.items4.find_all('div', class_='col-md-1 time')
@@ -176,17 +176,13 @@ class get_content_pog:
             self.pog4.append(self.into4[i].text)
 
 
-
-
-
-
 class show_content_pog(get_content_pog):
 
     def show(self):
 
         print("▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬")
         print("Джерело №2")
-        print("\t\t\t\t\t\t\t\t\t\tПогода ")
+        print("\t\t\t\t\t\t\t\t\t\tПогода в ",self.name_local)
         print("Температура прямо  зараз: " + self.p1['grad'])
         print("Температура: вдень " + self.pog3[0], "||", "\tввечері " + self.pog3[1])
         print("Прогноз на день")
@@ -205,13 +201,14 @@ class show_content_pog(get_content_pog):
 
 
 
+
+
 def parse():
     x = str(input("Enter:"))
 
     Obj1 = get_html(x)
     s_sinoptik = Obj1.poiskpres_sinoptik()
-    s_pogoda= Obj1.poiskpres_pogoda()
-
+    s_pogoda = Obj1.poiskpres_pogoda()
 
     html_sinoptik = Obj1.g_html_sinoptik(s_sinoptik)
     print(html_sinoptik)
@@ -219,22 +216,17 @@ def parse():
     print(html_pogoda)
 
     if html_sinoptik.status_code == 200:
-        Obj2 = show_content_sin(html_sinoptik.text)
+        Obj2 = show_content_sin(html_sinoptik.text, x)
         Obj2.find_elem()
         Obj2.show()
+
+
     if html_pogoda.status_code == 200:
-        Obj3 = show_content_pog(html_pogoda.text)
+        Obj3 = show_content_pog(html_pogoda.text, x)
         Obj3.find_elem()
         Obj3.show()
     else:
         print("\nError")
 
 
-
 parse()
-
-
-
-
-
-
